@@ -1,20 +1,23 @@
 import { useContext } from 'react'
-import { boardContext } from './App.jsx'
+import { boardContext } from './include/Include.jsx'
+import {Greeting, MyButton } from './Button.jsx'
 
-const Board = () => {
+export const Board = () => {
 
-    const { board } = useContext(boardContext)
+    const { board, handleClick, message } = useContext(boardContext);
 
     return (
         <>
             <div>
                 <Greeting name="John" />
+                <h2>Playing: {message}</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 100px)', gap: '10px', justifyContent: 'center', marginTop: '20px' }}>
                     {board.map((label, i) =>
                         <MyButton
                             key={i}
                             label={label}
                             pos={i}
+                            handleClick={handleClick}
                         />
                     )}
                 </div>
@@ -22,5 +25,3 @@ const Board = () => {
         </>
     )
 }
-
-export default Board;
