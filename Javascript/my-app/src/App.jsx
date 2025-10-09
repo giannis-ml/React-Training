@@ -1,42 +1,22 @@
-import { useState, createContext, useContext } from 'react'
+import { useState, createContext } from 'react'
+import Board from './Board.jsx'
 import './App.css'
 
-const boardContext = createContext(null)
-
-const BoardProvider = boardContext.Provider
+export const boardContext = createContext(null);
+const BoardProvider = boardContext.Provide
 
 const Greeting = ({name}) => (
     <h1>Hello {name}</h1>
 )
 
-const MyButton = ({ trigger, label }) => (
-
-    <button onClick={trigger} style={{ width: 100,height: 100}}>{label}</button>
-)
-
-const Board = () => {
-
-    const {handleClick,board} = useContext(boardContext)
-
-    return (
-        <>
-            <div>
-                <Greeting name="John" />
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 100px)', gap: '10px', justifyContent: 'center', marginTop: '20px' }}>
-                    {board.map((label, i) =>
-                        <MyButton
-                            key={i}
-                            label={label}
-                            trigger={() => {
-                                handleClick(i)
-                            }}
-                        />
-                    )}
-                </div>
-            </div>
-        </>
-    )
-}
+const MyButton = ({ pos, label, handleClick }) => (
+    <button
+        onClick={() => handleClick(pos)}
+        style={{ width: 100, height: 100 }}
+    >
+        {label}
+    </button>
+);
 
 
 function App() {
@@ -66,4 +46,4 @@ function App() {
     )
 }
 
-export default App
+export default App;
