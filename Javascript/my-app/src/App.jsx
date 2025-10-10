@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import { BoardProvider } from './include/Include.jsx'
 import { Board } from './Board.jsx'
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import './App.css'
 
 
@@ -17,6 +20,21 @@ function App() {
 
     const [winsOfX, setWinsOfX] = useState(0)
     const [winsOfY, setWinsOfY] = useState(0)
+
+    const darkTheme = createTheme({
+        palette: {
+            mode: 'dark',
+            primary: {main:'#ff0000'}
+        },
+        components: {
+            MuiButton: {
+                defaultProps: {
+                    disableRipple:true
+                }
+            }
+        }
+
+    });
 
     const checkIfGameFinished = () => {
 
@@ -73,11 +91,15 @@ function App() {
 
     return (
         <>
-            <BoardProvider value={{ board, isXnext, handleClick, message }}>
-                <Board />
-                <h2>{winsOfX}:{winsOfY}</h2>
-                <h2>{finishMessage}</h2>
-            </BoardProvider>
+            <ThemeProvider theme={darkTheme }>
+                <BoardProvider value={{ board, isXnext, handleClick, message }}>
+                    <Button variant="outlined">Hello World!!!</Button><br/>
+                    <TextField label="Type..."  variant="standard" />
+                    <Board />
+                    <h2>{winsOfX}:{winsOfY}</h2>
+                    <h2>{finishMessage}</h2>
+                    </BoardProvider>
+            </ThemeProvider>
         </>
     )
 }
