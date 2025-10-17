@@ -1,25 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { BoardProvider } from './include/Include.jsx'
 import { Board } from './Board.jsx'
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import './App.css'
+import { useSelector,useDispatch } from 'react-redux'
 
 
 
 function App() {
 
-    const [board, setBoard] = useState(Array(9).fill(null))
+    const board = useSelector(state => state.board)
 
-    const [isXnext, setPlayer] = useState(true)
+    const isXnext = useSelector(state=>state.isXnext)
 
-    const [message, setMessage] = useState("O")
+    const message = useSelector(state=>state.message)
 
-    const [finishMessage, setFinishMessage] = useState("")
-
-    const [winsOfX, setWinsOfX] = useState(0)
-    const [winsOfY, setWinsOfY] = useState(0)
+    const winsOfX = useSelector(state => state.xWins)
+    const winsOfY = useSelector(state => state.yWins)
 
     const darkTheme = createTheme({
         palette: {
@@ -36,7 +33,9 @@ function App() {
 
     });
 
-    const checkIfGameFinished = () => {
+    const dispatch = useDispatch()
+
+    const CheckIfGameFinished = () => {
 
         const winningCombinations = [
             [0, 1, 2], 
@@ -53,25 +52,23 @@ function App() {
             const [a, b, c] = combo;
             if (board[a] && board[a] === board[b] && board[b] === board[c]) {
                 if (board[a] === 'x')
-                    setWinsOfX(prev => prev + 1);
+                    dispatch({type:"XWIN"})
                 else
-                    setWinsOfY(prev => prev + 1);
-                setFinishMessage(`Winner: ${board[a]}`);
-                setTimeout(() => setBoard(Array(9).fill(null)), 1000);
+                    dispatch({type:"YWIN"})
+                dispatch({type:"NEWGAME"})
                 return;
             }
         }
 
         if (!board.includes(null)) {
-            setFinishMessage("Draw!");
-            setTimeout(() => setBoard(Array(9).fill(null)), 1000);
+            setTimeout(() => dispatch({ type: "NEWGAME" }), 1000);
             return;
         }
 
     }
 
     useEffect(() => {
-        checkIfGameFinished();
+        CheckIfGameFinished();
     }, [board]);
 
     const handleClick = (position) => {
@@ -79,13 +76,9 @@ function App() {
 
         if (board[position]) return;
 
+        dispatch({ type: "SETBOARD", payload: position })
 
-        const nextBoard = board.slice()
-        nextBoard[position] = isXnext ? 'o' : 'x'
-
-        setMessage(isXnext ? "X" : "O")
-        setBoard(nextBoard)
-        setPlayer(!isXnext)
+        isXnext ? dispatch({ type: "ISYNEXT" }) : dispatch({type:"ISXNEXT"})
 
     }
 
@@ -93,13 +86,11 @@ function App() {
         <>
             <ThemeProvider theme={darkTheme }>
                 <BoardProvider value={{ board, isXnext, handleClick, message }}>
-                    <Button variant="outlined">Hello World!!!</Button><br/>
-                    <TextField label="Type..."  variant="standard" />
                     <Board />
                     <h2>{winsOfX}:{winsOfY}</h2>
-                    <h2>{finishMessage}</h2>
                     </BoardProvider>
             </ThemeProvider>
+
         </>
     )
 }

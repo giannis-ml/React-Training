@@ -1,9 +1,10 @@
 import { React } from 'react'
-import { boardContext } from './include/Include.jsx'
 
-export const Greeting = ({ name }) => (
-    <h1>Hello {name}</h1>
-)
+
+export const Greeting = ({ name }) => {
+
+    return (<h1>Hello {name}</h1>)
+}
 
 export const MyButton = ({ pos, label, handleClick }) => (
     <button
